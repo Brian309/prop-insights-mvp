@@ -40,7 +40,7 @@ Escalabilidad: El frontend renderiza todos los activos en una vista; para >100 a
 ## 6. Arquitectura y Trade-offs
 
 ## Diagrama de Arquitectura
-![Arquitectura Full Stack](docs/arch.png)
+![Arquitectura Full Stack](arch.png)
 
 ### 1. Autenticación
 * **Decisión:** Se implementó un acceso abierto Open API con configuración CORS permisiva `allow_origins=["*"]`.
