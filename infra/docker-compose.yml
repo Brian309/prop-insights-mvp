@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: prop_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: propinsights
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Carga datos falsos al inicio
+    networks:
+      - prop-network
+
+# Backend (FastAPI)
+  backend:
+    build: ../src/backend
+    container_name: prop_backend
+    ports:
+      - "8000:8000"  # Puerto estándar de FastAPI
+    environment:
+      DATABASE_URL: postgresql://admin:password123@db:5432/propinsights
+    depends_on:
+      - db
+    networks:
+      - prop-network
+
+  # Frontend (React + Vite)
+  frontend:
+    build: ../src/frontend
+    container_name: prop_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    networks:
+      - prop-network
+
+networks:
+  prop-network:
+    driver: bridge
